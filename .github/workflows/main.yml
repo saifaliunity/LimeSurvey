@@ -421,8 +421,9 @@ jobs:
       - name: Load custom console and start the Application
         run: |
           cp application/config/config-sample-sqlsrv.php application/config/config.php
-          # Update config with correct credentials
+          # Update config with correct credentials and add TrustServerCertificate for MSSQL 2022
           sed -i "s/'password' => 'somepassword'/'password' => 'LimeSurvey123!'/g" application/config/config.php
+          sed -i "s/Server=localhost;Database=limesurvey/Server=localhost;Database=limesurvey;TrustServerCertificate=yes/g" application/config/config.php
           php application/commands/console.php install admin password TravisLS no@email.com verbose
 
       - name: Run unit tests
