@@ -253,9 +253,9 @@ jobs:
           # Install missing dependency for Ubuntu 22.04
           wget http://archive.ubuntu.com/ubuntu/pool/main/o/openldap/libldap-2.4-2_2.4.57+dfsg-3ubuntu1_amd64.deb
           sudo dpkg -i libldap-2.4-2_2.4.57+dfsg-3ubuntu1_amd64.deb
-          # Enable Microsoft Repository (using Ubuntu 20.04 for MSSQL 2019)
+          # Enable Microsoft Repository (using Ubuntu for MSSQL 2019)
           wget -qO- https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -
-          sudo add-apt-repository "$(wget -qO- https://packages.microsoft.com/config/ubuntu/20.04/mssql-server-${{ matrix.db-version }}.list)"
+          sudo add-apt-repository "$(wget -qO- https://packages.microsoft.com/config/ubuntu/22.04/mssql-server-${{ matrix.db-version }}.list)"
           # Install MSSQL Server
           sudo apt-get update
           sudo apt-get install -y mssql-server
@@ -264,7 +264,7 @@ jobs:
           # Verify MSSQL Server is running
           sudo systemctl status mssql-server --no-pager
           # Install Command-Line Tools
-          curl https://packages.microsoft.com/config/ubuntu/20.04/prod.list | sudo tee /etc/apt/sources.list.d/msprod.list
+          curl https://packages.microsoft.com/config/ubuntu/22.04/prod.list | sudo tee /etc/apt/sources.list.d/msprod.list
           sudo apt-get update
           sudo ACCEPT_EULA=Y apt-get install -y mssql-tools unixodbc-dev
           # Wait for MSSQL to be fully ready
