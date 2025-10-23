@@ -439,7 +439,7 @@ jobs:
   disabled-test-coverage:
     if: false
     runs-on: ubuntu-22.04
-    needs: unit-tests
+    needs: [unit-tests-postgresql, unit-tests-mssql]
     strategy:
       matrix:
         include:
