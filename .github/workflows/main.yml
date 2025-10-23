@@ -250,26 +250,21 @@ jobs:
       - name: Install and setup MSSQL Server ${{ matrix.db-version }}
         if: matrix.db-type == 'mssql'
         run: |
-          # Add Microsoft GPG key
+          # Enable Microsoft Repository (using Ubuntu 20.04 for MSSQL 2019)
           wget -qO- https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -
-          # Add MSSQL Server repository (using Ubuntu 20.04 repo for MSSQL 2019)
           sudo add-apt-repository "$(wget -qO- https://packages.microsoft.com/config/ubuntu/20.04/mssql-server-${{ matrix.db-version }}.list)"
-          # Install dependency required for Ubuntu 22.04
-          wget http://archive.ubuntu.com/ubuntu/pool/main/o/openldap/libldap-2.4-2_2.4.49+dfsg-2ubuntu1.9_amd64.deb
-          sudo dpkg -i libldap-2.4-2_2.4.49+dfsg-2ubuntu1.9_amd64.deb
           # Install MSSQL Server
           sudo apt-get update
-          sudo ACCEPT_EULA=Y apt-get install -y mssql-server
-          # Configure MSSQL Server
+          sudo apt-get install -y mssql-server
+          # Configure MSSQL Server (non-interactive setup)
           sudo MSSQL_SA_PASSWORD='LimeSurvey123!' MSSQL_PID='Developer' /opt/mssql/bin/mssql-conf -n setup accept-eula
-          # Start MSSQL Server service
-          sudo systemctl start mssql-server
-          sudo systemctl status mssql-server
-          # Install MSSQL tools
-          curl https://packages.microsoft.com/config/ubuntu/22.04/prod.list | sudo tee /etc/apt/sources.list.d/mssql-release.list
+          # Verify MSSQL Server is running
+          sudo systemctl status mssql-server --no-pager
+          # Install Command-Line Tools
+          curl https://packages.microsoft.com/config/ubuntu/20.04/prod.list | sudo tee /etc/apt/sources.list.d/msprod.list
           sudo apt-get update
           sudo ACCEPT_EULA=Y apt-get install -y mssql-tools unixodbc-dev
-          # Wait for MSSQL to be ready
+          # Wait for MSSQL to be fully ready
           sleep 10
           # Create database and verify version
           /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P 'LimeSurvey123!' -Q "CREATE DATABASE limesurvey"
