@@ -251,8 +251,8 @@ jobs:
         if: matrix.db-type == 'mssql'
         run: |
           # Install missing dependency for Ubuntu 22.04
-          wget http://archive.ubuntu.com/ubuntu/pool/main/o/openldap/libldap-2.4-2_2.4.57+dfsg-3ubuntu1_amd64.deb
-          sudo dpkg -i libldap-2.4-2_2.4.57+dfsg-3ubuntu1_amd64.deb
+          wget http://security.ubuntu.com/ubuntu/pool/main/o/openldap/libldap-2.5-0_2.5.16+dfsg-0ubuntu0.22.04.2_amd64.deb
+          sudo dpkg -i libldap-2.5-0_2.5.16+dfsg-0ubuntu0.22.04.2_amd64.deb
           # Enable Microsoft Repository (using Ubuntu for MSSQL 2019)
           wget -qO- https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -
           sudo add-apt-repository "$(wget -qO- https://packages.microsoft.com/config/ubuntu/22.04/mssql-server-${{ matrix.db-version }}.list)"
