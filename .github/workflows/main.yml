@@ -257,6 +257,8 @@ jobs:
       - name: Setup PostgreSQL database
         if: matrix.db-type == 'pgsql'
         run: |
+          # Install PostgreSQL client tools
+          sudo apt-get install -y postgresql-client
           # Wait for PostgreSQL to be ready
           until pg_isready -h localhost -p 5432; do
             echo "Waiting for PostgreSQL..."
@@ -284,6 +286,7 @@ jobs:
           cp application/config/config-sample-pgsql.php application/config/config.php
           # Update config with correct credentials
           sed -i "s/password=somepassword/password=postgres/g" application/config/config.php
+          sed -i "s/'password' => 'somepassword'/'password' => 'postgres'/g" application/config/config.php
           php application/commands/console.php install admin password TravisLS no@email.com verbose
 
       - name: Load custom console and start the Application (MSSQL)
