@@ -162,7 +162,7 @@ jobs:
           retention-days: 5
 
   unit-tests:
-    runs-on: ubuntu-22.04
+    runs-on: self-hosted
     strategy:
       matrix:
         include:
@@ -306,7 +306,7 @@ jobs:
           path: cov.xml
 
   test-coverage:
-    runs-on: ubuntu-22.04
+    runs-on: self-hosted
     needs: unit-tests
     strategy:
       matrix:
