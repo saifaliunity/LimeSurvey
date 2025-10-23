@@ -182,7 +182,7 @@ jobs:
           # MSSQL tests with PHP 8.3 only
           - php-version: '8.3'
             db-type: 'mssql'
-            db-version: '2019'
+            db-version: '2022'
     env:
       DBENGINE: INNODB
 
@@ -250,12 +250,9 @@ jobs:
       - name: Install and setup MSSQL Server ${{ matrix.db-version }}
         if: matrix.db-type == 'mssql'
         run: |
-          # Install missing dependency for Ubuntu 22.04
-          wget http://security.ubuntu.com/ubuntu/pool/main/o/openldap/libldap-2.5-0_2.5.16+dfsg-0ubuntu0.22.04.2_amd64.deb
-          sudo dpkg -i libldap-2.5-0_2.5.16+dfsg-0ubuntu0.22.04.2_amd64.deb
-          # Enable Microsoft Repository (using Ubuntu for MSSQL 2019)
-          wget -qO- https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -
-          sudo add-apt-repository "$(wget -qO- https://packages.microsoft.com/config/ubuntu/22.04/mssql-server-${{ matrix.db-version }}.list)"
+          # Enable Microsoft Repository for MSSQL Server 2022 (officially supports Ubuntu 22.04)
+          curl -fsSL https://packages.microsoft.com/keys/microsoft.asc | sudo gpg --dearmor -o /usr/share/keyrings/microsoft-prod.gpg
+          curl -fsSL https://packages.microsoft.com/config/ubuntu/22.04/mssql-server-${{ matrix.db-version }}.list | sudo tee /etc/apt/sources.list.d/mssql-server.list
           # Install MSSQL Server
           sudo apt-get update
           sudo apt-get install -y mssql-server
@@ -264,14 +261,14 @@ jobs:
           # Verify MSSQL Server is running
           sudo systemctl status mssql-server --no-pager
           # Install Command-Line Tools
-          curl https://packages.microsoft.com/config/ubuntu/22.04/prod.list | sudo tee /etc/apt/sources.list.d/msprod.list
+          curl -fsSL https://packages.microsoft.com/config/ubuntu/22.04/prod.list | sudo tee /etc/apt/sources.list.d/msprod.list
           sudo apt-get update
-          sudo ACCEPT_EULA=Y apt-get install -y mssql-tools unixodbc-dev
+          sudo ACCEPT_EULA=Y apt-get install -y mssql-tools18 unixodbc-dev
           # Wait for MSSQL to be fully ready
           sleep 10
           # Create database and verify version
-          /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P 'LimeSurvey123!' -Q "CREATE DATABASE limesurvey"
-          /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P 'LimeSurvey123!' -d limesurvey -Q "SELECT @@VERSION"
+          /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P 'LimeSurvey123!' -C -Q "CREATE DATABASE limesurvey"
+          /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P 'LimeSurvey123!' -C -d limesurvey -Q "SELECT @@VERSION"
 
       - name: Load custom console and start the Application (MySQL)
         if: matrix.db-type == 'mysql'
