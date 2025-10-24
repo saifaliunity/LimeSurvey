@@ -13,8 +13,8 @@ on:
 
 jobs:
   # Temporarily disabled to save time - only running unit-tests
-  disabled-CI-pipeline:
-    if: false
+  CI-pipeline:
+    
     runs-on: ubuntu-22.04    # ubuntu runner hosted by Github
     strategy:
       matrix:
@@ -163,8 +163,7 @@ jobs:
           path: tests/tmp/screenshots/
           retention-days: 5
 
-  disabled-unit-tests:
-    if: false
+  unit-tests: 
     runs-on: ubuntu-22.04
     strategy:
       matrix:
@@ -437,18 +436,17 @@ jobs:
           name: cov-file-8.3-mssql
           path: cov.xml
 
-  disabled-test-coverage:
-    if: false
+  test-coverage:
     runs-on: ubuntu-22.04
     needs: [unit-tests-postgresql, unit-tests-mssql]
     strategy:
       matrix:
         include:
           # Coverage check for MySQL tests with PHP 7.4 and 8.3 - TEMPORARILY DISABLED
-          # - php-version: '7.4'
-          #   db-type: 'mysql'
-          # - php-version: '8.3'
-          #   db-type: 'mysql'
+          - php-version: '7.4'
+            db-type: 'mysql'
+          - php-version: '8.3'
+            db-type: 'mysql'
           # Coverage check for PostgreSQL tests with PHP 8.3 only
           - php-version: '8.3'
             db-type: 'pgsql'
@@ -478,8 +476,8 @@ jobs:
       - name: Check test coverage if cov.xml exists (won't work on PHP 8 with current phpunit version)
         run: php tests/bin/check_coverage.php cov.xml 37
 
-  disabled-code-check:
-    if: false
+  code-check:
+    
     runs-on: ubuntu-22.04
     env:
       DBENGINE: INNODB
