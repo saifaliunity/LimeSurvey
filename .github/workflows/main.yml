@@ -169,7 +169,7 @@ jobs:
     strategy:
       matrix:
         include:
-          # MySQL tests with PHP 7.4 and 8.3 - TEMPORARILY DISABLED
+          # MySQL tests with PHP 7.4 and 8.3
           - php-version: '7.4'
             db-type: 'mysql'
             db-version: '8.0'
