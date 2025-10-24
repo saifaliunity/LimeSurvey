@@ -170,12 +170,12 @@ jobs:
       matrix:
         include:
           # MySQL tests with PHP 7.4 and 8.3 - TEMPORARILY DISABLED
-          # - php-version: '7.4'
-          #   db-type: 'mysql'
-          #   db-version: '8.0'
-          # - php-version: '8.3'
-          #   db-type: 'mysql'
-          #   db-version: '8.0'
+          - php-version: '7.4'
+            db-type: 'mysql'
+            db-version: '8.0'
+          - php-version: '8.3'
+            db-type: 'mysql'
+            db-version: '8.0'
           # PostgreSQL tests with PHP 8.3 only
           - php-version: '8.3'
             db-type: 'pgsql'
